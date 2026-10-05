@@ -1,0 +1,56 @@
+# TV1 data checks
+
+## 1. Frames and split
+GT masks (all WoodScape soiling frames): 5000
+Test frames (= repo prediction files): 497   train/val: 4503   (paper P1: 4503 / 497)
+split   test  train/val
+camera                 
+FV       139       1166
+RV       129       1111
+MVL      113       1101
+MVR      116       1125
+
+## 2. Mask format
+GT  : mode L, size (1280, 960), classes 0..3 = ['clear', 'transparent', 'semi', 'opaque']
+Pred: mode L, size (512, 512) (repo resizes to 512x512 before predicting)
+
+## 3. Soiling in the test set (GT, full frame)
+Pixel share per class: {'clear': '62.0%', 'transparent': '6.0%', 'semi': '8.7%', 'opaque': '23.3%'}
+Coverage min 3.0%, Q1 11.0%, median 27.0%, Q3 69.6%, max 100.0%
+Frames with coverage < 5%: 27   > 50%: 154   fully clean: 0
+        count    min    50%    max
+camera                            
+FV      139.0  0.041  0.311  1.000
+RV      129.0  0.041  0.196  1.000
+MVL     113.0  0.030  0.140  0.999
+MVR     116.0  0.041  0.310  1.000
+
+## 4. Duplicated GT masks (frames of one sequence share the annotation)
+All frames: 5000 -> 3017 distinct masks
+Test frames: 497 -> 399 distinct masks, largest group 8 frames
+Example group in test: ['0268_MVR.png', '0269_MVR.png', '0270_MVR.png', '0271_MVR.png', '0272_MVR.png', '0273_MVR.png', '0274_MVR.png', '0275_MVR.png']
+
+## 5. Leakage: test frames whose exact mask is also used by a train/val frame
+8 of 497 test frames (1.6%): ['0268_MVR.png', '0435_MVL.png', '0436_MVL.png', '0437_MVL.png', '0438_MVL.png', '0439_MVL.png', '0440_MVL.png', '0441_MVL.png']
+Paper P1 regrouped the split by sequence; what is left is exact-mask overlap only (near-duplicates not checked)
+
+## 6. Frame ids (recording sessions)
+Test frames per id range: {'0-999': 232, '1000-1999': 17, '2000-2499': 0, '2500-2999': 0, '3000-3999': 0, '4000-4999': 248}
+-> two separate blocks; Exp C calibrates on id < 2500 and evaluates on id >= 2500
+
+## 7. Visible fisheye area (camera_health/assets, from build_valid_masks.py)
+{'FV': '95.6%', 'RV': '88.9%', 'MVL': '94.5%', 'MVR': '95.5%'}
+
+## 8. Repo label-resize artefact
+PIL default (bicubic) vs NEAREST resize of GT labels: 0.20% of pixels differ (first 100 test frames) -> negligible
+
+## 9. Repo models (evaluations/stats of model_outputs.zip)
+39 models. Best 3 and worst 1 by mIoU:
+                                                      model  accuracy  mIoU  IoU_transparent  IoU_opaque
+                 fpn_resnet50_torch_cross_entropy_all_files     0.945 0.613            0.275       0.814
+             fpn_resnet18_torch_cross_entropy_correct_files     0.941 0.613            0.281       0.825
+                 fpn_resnet18_torch_cross_entropy_all_files     0.944 0.607            0.260       0.816
+pan_resnet18_torch_cross_entropy_correct_clear_strict_files     0.900 0.436            0.127       0.635
+IoU transparent over all models: 0.10-0.30; opaque: 0.64-0.82
+
+Plots: results/tv1_data/coverage_hist.png, results/tv1_data/valid_masks.png
