@@ -1,0 +1,54 @@
+# Camera health scoring configuration.
+# Every number here is a design assumption of the lab, not a value taken from WoodScape or a standard.
+# Change it here and re-run the benchmark; results/ records which config produced which numbers.
+
+# Masks are evaluated at the same size the repo predicts at (pytorch_l_base_pred.py resizes to 512x512).
+working_size: [512, 512]
+
+# Light blocked by each mask class: 0 clear, 1 transparent, 2 semi-transparent, 3 opaque.
+# Semi-transparent is not in the pipeline diagram; it is kept as its own ratio and weighted in between.
+class_opacity: [0.0, 0.33, 0.66, 1.0]
+
+# Spatial position: Gaussian weight around the image centre (normalised radius, 1.0 = middle of an edge).
+# Fisheye periphery is strongly distorted and less used by perception, so soiling there costs less.
+spatial_sigma: 0.5
+
+# Critical ROI per camera as normalised [x0, y0, x1, y1] on the 512x512 image.
+# FV/RV: road and horizon in front of / behind the car, above the bumper.
+# MVL/MVR: side mirror cameras, the lane next to the car, away from the visible car body.
+roi:
+  FV: [0.15, 0.30, 0.85, 0.80]
+  RV: [0.15, 0.25, 0.85, 0.75]
+  MVL: [0.20, 0.20, 0.80, 0.70]
+  MVR: [0.20, 0.20, 0.80, 0.70]
+  default: [0.20, 0.25, 0.80, 0.75]
+
+# Soiling Severity = weighted sum of three occlusion features, each in [0, 1].
+severity_weights:
+  global: 0.3   # effective occlusion over the whole valid fisheye area
+  spatial: 0.3  # centre-weighted occlusion
+  roi: 0.4      # occlusion inside the critical ROI
+
+# Camera Health Score = 100 * (1 - severity).
+# State: score >= healthy -> Healthy; score < unreliable -> Unreliable; otherwise Degraded.
+thresholds:
+  healthy: 80
+  unreliable: 50
+
+# Safety override: if this fraction of the critical ROI is opaque the camera is Unreliable whatever the score.
+roi_opaque_override: 0.5
+
+camera_weight:
+  Healthy: 1.0
+  Degraded: 0.5
+  Unreliable: 0.0
+
+# Improvement tested in benchmark/exp_c_image_check.py (off by default, so Exp A/B measure the mask-only pipeline).
+# The mask says "transparent" but not how strong the blur is: a lens fully covered by transparent soiling scores
+# 100 * (1 - 0.33) = 67 and can never become Unreliable. When enabled, the image itself is checked as well:
+# if ROI edge density < min_ratio * the camera's clean reference, the camera is Unreliable.
+image_check:
+  enabled: false
+  min_ratio: 0.2
+  # Median ROI edge density of GT-Healthy test frames with id < 2500 (results/exp_c_image_check/reference_edge_density.json)
+  reference_edge_density: {FV: 0.1006, MVL: 0.0869, MVR: 0.1003, RV: 0.1248}
