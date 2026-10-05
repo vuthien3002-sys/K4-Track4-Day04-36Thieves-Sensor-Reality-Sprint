@@ -128,7 +128,14 @@ Tôi chạy `assess()` trên các mask 512×512 tự tạo, camera FV, có dùng
 3. Dùng ROI theo tác vụ, hoặc lấy ROI từ heatmap attention của mạng perception.
 4. Kết hợp image check với độ tin cậy của mạng segmentation (softmax entropy).
 
-## 7. Chưa thực hiện trong báo cáo này
+## 7. Cập nhật sau khi nhóm đã push đủ benchmark
 
-- `camera_health` có nhắc tới `benchmark/` (Exp A/B/C, `build_valid_masks.py`, `exp_c_image_check.py`) và `results/`. **Các thư mục này hiện không có trong repo**, và dataset `woodscape_input/` cùng `model_outputs/` cũng chưa được tải về.
-- Vì vậy báo cáo này **không có** số liệu benchmark trên ảnh WoodScape thật hay trên mask dự đoán của mạng. Giá trị `reference_edge_density` trong config được ghi lại như hiện có, tôi chưa tự đo lại.
+- Lúc viết báo cáo này, `benchmark/` và `results/` chưa có trong repo. **Hiện cả hai đã có:** code benchmark ở commit `1671f3d`; log, CSV, plot và unit test ở commit `ede9490`.
+- Số liệu trên ảnh WoodScape thật và trên mask dự đoán của mạng:
+  - Exp A: [results/exp_a_real/log.txt](results/exp_a_real/log.txt)
+  - Exp B: [results/exp_b_controlled/log.txt](results/exp_b_controlled/log.txt)
+  - Exp C: [results/exp_c_image_check/log.txt](results/exp_c_image_check/log.txt)
+  - Tổng hợp: [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)
+- Giá trị `reference_edge_density` trong config (FV 0.1006, MVL 0.0869, MVR 0.1003, RV 0.1248) được đo lại trong Exp C, xem [reference_edge_density.json](results/exp_c_image_check/reference_edge_density.json).
+- Bảng kiểm thử ở mục 4 đã được chạy lại và cho đúng các số ở trên.
+- Bản báo cáo đủ 5 mục theo đề (Problem, Method, Benchmark, Failure case, Engineering decision), có thêm số liệu benchmark thật: [reports/TV2_thuat_toan.md](reports/TV2_thuat_toan.md).

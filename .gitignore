@@ -170,3 +170,6 @@ venv
 # ...but the benchmark evidence and the fisheye masks are committed despite the *.png rule above
 !/results/**/*.png
 !/camera_health/assets/*.png
+
+# macOS Finder metadata
+.DS_Store
