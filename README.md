@@ -37,3 +37,11 @@ evaluation/evaluation.py -> Evaluation script to use per one network prediction
   <li>After you do this for all networks and configuration. Run for each predictions networks_run/evaluation/evaluation.py and store results again next to the models in folder "evaluations"</li>
   <li>You can run data_statistics/netoworks_evaluation.ipynb. If you removed some configurations, removed them also from list of settings contained in jupyter notebook.</li>
 </ol> 
+## Camera health lab (Track 4 · Day 04, nhóm 36Thieves)
+Phần mở rộng của nhóm biến mask bẩn lens của repo thành Camera Health Score (0–100), state (Healthy/Degraded/Unreliable) và weight (1.0/0.5/0).
+<ul>
+<li><b>camera_health/</b> -> pipeline: 5 đặc trưng, severity, score, state, weight (<code>python -m camera_health --help</code>)</li>
+<li><b>benchmark/</b> -> tải một phần dữ liệu/model, Exp A (GT so với mask dự đoán), Exp B (vết bẩn mô phỏng), Exp C (cải tiến kiểm tra ảnh)</li>
+<li><b>results/</b> -> log, CSV, plot của các thực nghiệm</li>
+<li><b>BENCHMARK_RESULTS.md</b> -> bằng chứng chung và lệnh tái hiện; <b>TEAMMATES.md</b> và <b>reports/</b> -> thành viên và báo cáo riêng</li>
+</ul>

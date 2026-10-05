@@ -164,3 +164,9 @@ venv
 /output
 /test_inputs
 .vscode
+# Camera health lab: downloaded data stays local (benchmark/fetch_woodscape_subset.py re-creates it)
+/woodscape_input/
+/model_outputs/
+# ...but the benchmark evidence and the fisheye masks are committed despite the *.png rule above
+!/results/**/*.png
+!/camera_health/assets/*.png
