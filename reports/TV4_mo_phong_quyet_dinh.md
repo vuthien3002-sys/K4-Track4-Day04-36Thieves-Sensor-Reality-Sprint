@@ -21,7 +21,7 @@ Phần tôi kiểm tra hai vấn đề không thể hiện rõ nếu chỉ chạ
 
 ### Exp B — benchmark mô phỏng có đối chứng
 
-Mã chạy: [`benchmark/exp_b_controlled.py`](../benchmark/exp_b_controlled.py). Chọn 8 frame test ít bẩn nhất cho mỗi camera (32 frame, 4 camera) làm baseline; vì dữ liệu WoodScape không có frame sạch hoàn toàn, baseline vẫn còn 3–8% GT coverage. Trên **chính các frame đó**, tôi chỉ thay một nhân tố:
+Mã chạy: [`benchmark/exp_b_controlled.py`](../benchmark/exp_b_controlled.py). Chọn 8 frame test ít bẩn nhất cho mỗi camera (32 frame, 4 camera) làm baseline; vì dữ liệu WoodScape không có frame sạch hoàn toàn, baseline vẫn còn 3.0–11.1% GT coverage ([base_frames.csv](../results/exp_b_controlled/base_frames.csv)). Trên **chính các frame đó**, tôi chỉ thay một nhân tố:
 
 - loại soiling: transparent hoặc opaque;
 - vị trí: centre hoặc periphery;
