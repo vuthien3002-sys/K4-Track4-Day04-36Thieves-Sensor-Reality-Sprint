@@ -1,0 +1,68 @@
+# Exp A - real WoodScape test frames: 497 frames, {'FV': 139, 'RV': 129, 'MVR': 116, 'MVL': 113}
+
+## GT camera states (reference)
+state   Healthy  Degraded  Unreliable
+camera                               
+FV           61        28          50
+MVL          25        55          33
+MVR          28        53          35
+RV           61        43          25
+
+## Decision quality per segmentation model (baseline = GT mask)
+         label  seg_mIoU  IoU_transparent  IoU_opaque   n  score_MAE  score_bias  state_acc  kappa  unsafe_rate  missed_unreliable  false_alarm  weight_MAE
+       FPN-R18     0.616            0.287       0.828 497      2.953      -1.111      0.948  0.940        0.000              0.028          0.0       0.026
+       FPN-R50     0.617            0.284       0.818 497      2.720      -0.795      0.942  0.933        0.000              0.091          0.0       0.029
+      UNet-R18     0.558            0.216       0.795 497      3.288      -2.596      0.944  0.935        0.000              0.021          0.0       0.028
+PAN-R18-strict     0.440            0.130       0.645 497      9.033       1.540      0.803  0.744        0.105              0.224          0.0       0.114
+
+## Main model FPN-R18: per camera
+camera   n  score_MAE  score_bias  state_acc  kappa  unsafe_rate  missed_unreliable  false_alarm  weight_MAE
+    FV 139      3.185      -0.439      0.978  0.977          0.0              0.000          0.0       0.011
+    RV 129      3.173      -1.635      0.961  0.952          0.0              0.040          0.0       0.019
+   MVL 113      1.570      -0.253      0.956  0.943          0.0              0.000          0.0       0.022
+   MVR 116      3.776      -2.170      0.888  0.862          0.0              0.086          0.0       0.056
+
+## Main model FPN-R18: per GT coverage level (trend as soiling grows)
+gt_coverage  gt_score_mean  pred_score_mean   n  score_MAE  score_bias  state_acc  kappa  unsafe_rate  missed_unreliable  false_alarm  weight_MAE
+       <10%         90.932           90.473  93      1.284      -0.460      1.000    NaN          0.0              0.000          0.0       0.000
+     10-30%         80.192           80.356 168      1.736       0.164      0.923  0.846          0.0              0.000          0.0       0.039
+     30-60%         62.290           60.393 104      2.770      -1.896      0.971  0.909          0.0              0.136          0.0       0.014
+       >60%         30.029           27.455 132      5.821      -2.574      0.924  0.259          0.0              0.008          0.0       0.038
+
+## Threshold sensitivity (main model)
+ healthy>=  unreliable<  GT_unreliable_share  state_acc  missed_unreliable  false_alarm
+        70           40                0.191      0.936              0.032          0.0
+        70           50                0.288      0.964              0.028          0.0
+        70           60                0.324      0.962              0.000          0.0
+        75           40                0.191      0.918              0.032          0.0
+        75           50                0.288      0.946              0.028          0.0
+        75           60                0.324      0.944              0.000          0.0
+        80           40                0.191      0.920              0.032          0.0
+        80           50                0.288      0.948              0.028          0.0
+        80           60                0.324      0.946              0.000          0.0
+        85           40                0.191      0.877              0.032          0.0
+        85           50                0.288      0.905              0.028          0.0
+        85           60                0.324      0.903              0.000          0.0
+        90           40                0.191      0.930              0.032          0.0
+        90           50                0.288      0.958              0.028          0.0
+        90           60                0.324      0.956              0.000          0.0
+
+## Ablation: simpler scores with the same thresholds (main model)
+             score  score_MAE  state_acc  GT_unreliable_share  unsafe_rate
+     coverage only      3.604      0.942                0.310          0.0
+coverage x opacity      2.576      0.976                0.262          0.0
+     full pipeline      2.953      0.948                0.288          0.0
+
+## State confusion (rows GT, cols pred): ['Healthy', 'Degraded', 'Unreliable']
+[[174   1   0]
+ [ 12 158   9]
+ [  0   4 139]]
+
+## Failure cases: 16 frames look healthier than GT, 10 look worse
+        file  gt_score  pred_score   gt_state pred_state                                                             pixel_errors
+ 4500_RV.png      45.0        52.9 Unreliable   Degraded GT transp -> pred clear 10% of frame; GT semi -> pred transp 7% of frame
+4518_MVR.png      48.2        53.4 Unreliable   Degraded GT transp -> pred clear 15% of frame; GT transp -> pred semi 2% of frame
+4522_MVR.png      48.2        53.0 Unreliable   Degraded GT transp -> pred clear 16% of frame; GT transp -> pred semi 3% of frame
+0568_MVR.png      52.4        31.3   Degraded Unreliable  GT clear -> pred transp 11% of frame; GT clear -> pred semi 7% of frame
+
+## Repo note: bicubic label resize changes 0.20% of GT pixels vs NEAREST

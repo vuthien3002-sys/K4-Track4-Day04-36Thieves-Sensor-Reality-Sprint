@@ -1,0 +1,49 @@
+# Exp C - image check on top of the mask-only pipeline
+Calibration: 91 GT-Healthy frames with id < 2500 {'FV': 38, 'MVR': 19, 'RV': 19, 'MVL': 15}
+Reference ROI edge density per camera: {'FV': 0.1006, 'MVL': 0.0869, 'MVR': 0.1003, 'RV': 0.1248}
+
+## Exp B conditions: share of frames Unreliable, v1 vs v2 (min_ratio)
+                condition  v1_unreliable  v1_weight  v2_unreliable@0.1  v2_unreliable@0.15  v2_unreliable@0.2  v2_unreliable@0.25  v2_unreliable@0.3
+                 baseline           0.00       1.00               0.00                0.00               0.00                0.00               0.06
+   transparent/centre/10%           0.00       0.92               0.00                0.00               0.06                0.12               0.16
+   transparent/centre/25%           0.00       0.83               0.03                0.16               0.22                0.25               0.28
+   transparent/centre/40%           0.00       0.50               0.22                0.31               0.44                0.50               0.56
+   transparent/centre/60%           0.00       0.50               0.47                0.81               0.97                0.97               0.97
+transparent/periphery/10%           0.00       1.00               0.00                0.00               0.00                0.00               0.09
+transparent/periphery/25%           0.00       0.92               0.00                0.00               0.00                0.00               0.09
+transparent/periphery/40%           0.00       0.92               0.00                0.00               0.00                0.03               0.09
+transparent/periphery/60%           0.00       0.83               0.00                0.00               0.00                0.12               0.19
+        opaque/centre/10%           0.00       0.53               0.00                0.03               0.06                0.12               0.16
+        opaque/centre/25%           0.97       0.02               0.97                0.97               0.97                0.97               0.97
+        opaque/centre/40%           1.00       0.00               1.00                1.00               1.00                1.00               1.00
+        opaque/centre/60%           1.00       0.00               1.00                1.00               1.00                1.00               1.00
+     opaque/periphery/10%           0.00       0.92               0.00                0.00               0.00                0.00               0.09
+     opaque/periphery/25%           0.00       0.83               0.00                0.00               0.00                0.00               0.09
+     opaque/periphery/40%           0.00       0.50               0.00                0.00               0.00                0.03               0.09
+     opaque/periphery/60%           0.06       0.47               0.06                0.06               0.06                0.19               0.22
+
+## Real test frames id >= 2500 (n=248): cost and benefit of v2
+ min_ratio  GT_Healthy_flagged  GT_Degraded_flagged  GT_Unreliable_flagged  unreliable_share_v1  unreliable_share_v2  pred_missed_unreliable_v1  pred_missed_unreliable_v2
+      0.10                 0.0                0.028                  0.255                0.222                0.234                      0.073                      0.073
+      0.15                 0.0                0.073                  0.327                0.222                0.254                      0.073                      0.073
+      0.20                 0.0                0.138                  0.400                0.222                0.282                      0.073                      0.073
+      0.25                 0.0                0.156                  0.509                0.222                0.290                      0.073                      0.073
+      0.30                 0.0                0.165                  0.691                0.222                0.294                      0.073                      0.036
+
+## Frames v2 (min_ratio=0.2) moves to Unreliable although the GT mask is not Unreliable: 15
+        file camera    state  health_score  coverage  transparent_ratio  edge_ratio
+4792_MVR.png    MVR Degraded         66.92     0.282              0.364       0.140
+4793_MVR.png    MVR Degraded         66.92     0.282              0.364       0.136
+4794_MVR.png    MVR Degraded         66.92     0.282              0.364       0.197
+4796_MVR.png    MVR Degraded         66.92     0.282              0.364       0.196
+4797_MVR.png    MVR Degraded         66.92     0.282              0.364       0.147
+4798_MVR.png    MVR Degraded         66.92     0.282              0.364       0.143
+4920_MVR.png    MVR Degraded         63.80     0.319              0.347       0.161
+4921_MVR.png    MVR Degraded         63.80     0.319              0.347       0.156
+4922_MVR.png    MVR Degraded         63.81     0.319              0.348       0.160
+4924_MVR.png    MVR Degraded         63.81     0.319              0.349       0.155
+4925_MVR.png    MVR Degraded         63.82     0.319              0.349       0.147
+4926_MVR.png    MVR Degraded         63.81     0.319              0.350       0.169
+ 4997_RV.png     RV Degraded         52.08     1.000              0.519       0.010
+ 4998_RV.png     RV Degraded         52.08     1.000              0.519       0.054
+ 4999_RV.png     RV Degraded         52.08     1.000              0.519       0.033

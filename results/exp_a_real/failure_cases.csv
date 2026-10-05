@@ -1,0 +1,5 @@
+file,camera,gt_score,pred_score,gt_state,pred_state,gt_coverage,pred_coverage,gt_roi_opaque,pred_roi_opaque,rank_gap,score_gap,pixel_errors
+4500_RV.png,RV,44.97,52.92,Unreliable,Degraded,0.6938445503403491,0.5854818716410101,0.20900619762569833,0.3119544343575419,1,7.950000000000003,GT transp -> pred clear 10% of frame; GT semi -> pred transp 7% of frame
+4518_MVR.png,MVR,48.15,53.35,Unreliable,Degraded,0.5969082380393003,0.45136608091801916,0.5224989853896104,0.4793653612012987,1,5.200000000000003,GT transp -> pred clear 15% of frame; GT transp -> pred semi 2% of frame
+4522_MVR.png,MVR,48.15,53.05,Unreliable,Degraded,0.5969082380393003,0.4420284643476454,0.5224989853896104,0.4902597402597403,1,4.899999999999999,GT transp -> pred clear 16% of frame; GT transp -> pred semi 3% of frame
+0568_MVR.png,MVR,52.43,31.26,Degraded,Unreliable,0.776552473649302,0.9740049065439231,0.20107041396103897,0.2772930194805195,-1,-21.169999999999998,GT clear -> pred transp 11% of frame; GT clear -> pred semi 7% of frame
