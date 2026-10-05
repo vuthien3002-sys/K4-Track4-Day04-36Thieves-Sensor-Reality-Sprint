@@ -12,7 +12,7 @@ Nhóm 36Thieves · T1 Camera health khi lens bẩn · Repo chung: <https://githu
 > - Dựng mặt nạ fisheye bằng [build_valid_masks.py](../benchmark/build_valid_masks.py).
 > - Kiểm tra trùng nhãn: 497 frame nhưng chỉ có 399 mask khác nhau.
 > - Kiểm tra rò rỉ giữa train và test: chỉ 2% frame trùng mask.
-> - Nếu kịp: đọc paper WoodScape (ICCV 2019) và SoilingNet (2019), ghi link chính xác.
+> - Nắm vững [SOURCES.md](../SOURCES.md), gồm 5 paper. Quan trọng nhất là P1, paper của chính repo (arXiv 2511.09740). Đọc kỹ phần dataset của P1: lỗi rò rỉ 7–8 frame cùng cảnh, cách chia lại 4503/497, và 4 tập con đã làm sạch.
 >
 > **Lệnh cần chạy lại:** `python benchmark/fetch_woodscape_subset.py --evals`, rồi `python -m benchmark.build_valid_masks`
 >
@@ -47,4 +47,6 @@ Nhóm 36Thieves · T1 Camera health khi lens bẩn · Repo chung: <https://githu
 
 ## Nguồn, version, lệnh chạy
 
-> Ghi: link repo, commit, link Google Drive của dataset và model, các lệnh ở mục 7 của BENCHMARK_RESULTS. Paper nào chưa đọc thì không ghi như nguồn đã dùng.
+> Ghi: link repo, commit, link Google Drive của dataset và model, các lệnh ở mục 7 của BENCHMARK_RESULTS. Paper lấy từ [SOURCES.md](../SOURCES.md), ghi đúng phần đã đọc (P1 đọc toàn văn, P2–P5 chỉ đọc abstract). Paper nào chưa đọc thì không ghi như nguồn đã dùng.
+>
+> Phần trọng tâm của bạn: dùng bảng "Nguồn cho biết gì, nhóm đo được gì" trong SOURCES.md. Ví dụ: P1 cho biết đã chia lại train/test theo chuỗi, còn nhóm kiểm tra và thấy vẫn còn 2% frame test trùng mask với train/val.
