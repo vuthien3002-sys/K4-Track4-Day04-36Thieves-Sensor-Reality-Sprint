@@ -52,9 +52,9 @@ Các số dưới đây **không so sánh trực tiếp** với nhau, vì khác 
 | Chủ đề | Paper/repo cho biết | Nhóm đo được (link) |
 |---|---|---|
 | Rò rỉ train/test | P1: dataset gốc có 7–8 frame cùng cảnh bị chia cả vào train lẫn test. P1 đã chia lại thành 4503/497. | Trên đúng 497 frame test này: chỉ có 399 mask khác nhau, và 8/497 frame test (1.6%) có mask trùng hệ với một frame train/val ([results/tv1_data/log.txt](results/tv1_data/log.txt)) |
-| Lớp transparent | P1: ranh giới Transparent/Semi "somewhat ambiguous" | IoU transparent 0.13–0.29 so với opaque 0.65–0.83. Đó là nguyên nhân của failure case F1 ([summary_models.csv](results/exp_a_real/summary_models.csv)) |
+| Lớp transparent | P1: ranh giới Transparent/Semi "somewhat ambiguous" | Trên 4 model nhóm dùng: IoU transparent 0.13–0.29 so với opaque 0.64–0.83. Trên cả 39 model của repo: 0.10–0.30 so với 0.64–0.82 ([repo_models_ranking.csv](results/tv1_data/repo_models_ranking.csv)). Đó là nguyên nhân của failure case F1 ([summary_models.csv](results/exp_a_real/summary_models.csv)) |
 | Chất lượng segmentation | P1: FPN đạt accuracy 0.940 | File evaluation của repo cho FPN-R50 accuracy 0.945. Nhóm tự tính lại mIoU = 0.617 (resize NEAREST, chỉ trong vùng fisheye) |
-| Từ coverage đến quyết định | P3: dùng coverage để kích hoạt rửa lens và giảm độ tin ở vùng bẩn | Nhóm tính coverage, opacity, vị trí và ROI rồi đưa ra score, state, weight. Ablation: chỉ dùng coverage cho state acc 94.2%, so với 94.8% của pipeline đầy đủ ([ablation_scores.csv](results/exp_a_real/ablation_scores.csv)) |
+| Từ coverage đến quyết định | P3: dùng coverage để kích hoạt rửa lens và giảm độ tin ở vùng bẩn | Nhóm tính coverage, opacity, vị trí và ROI rồi đưa ra score, state, weight. Ablation: chỉ dùng coverage cho state acc 94.2%, coverage × opacity cho 97.6%, pipeline đầy đủ cho 94.8% ([ablation_scores.csv](results/exp_a_real/ablation_scores.csv)) |
 | Vết bẩn nhân tạo | P4: GAN sinh ảnh bẩn kèm mask, train thêm thì tăng 18% | Exp B dùng vết bẩn tạo theo thủ tục (nhiễu + blur/màu bùn, **không dùng GAN**), nên kém thực tế hơn. Nhóm chỉ dùng nó để kiểm tra xu hướng của score, không dùng để train ([exp_b log](results/exp_b_controlled/log.txt)) |
 
 ## Nguồn chưa đọc, không dùng làm bằng chứng

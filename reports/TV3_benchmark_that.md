@@ -223,7 +223,7 @@ Không có frame Unreliable nào bị chấm thành Healthy. 4 frame Unreliable 
 
 ### Quyết định 1: chọn model theo metric quyết định
 - **Căn cứ [Đo]:** FPN-R18 và FPN-R50 có mIoU bằng nhau, nhưng tỉ lệ bỏ sót Unreliable là 2.8% so với 9.1%.
-- **Quyết định:** dùng **FPN-R18** cho bộ giám sát sức khỏe camera. Checkpoint của nó cũng nhỏ hơn: 157 MB so với 315 MB.
+- **Quyết định:** dùng **FPN-R18** cho bộ giám sát sức khỏe camera. Checkpoint của nó cũng nhỏ hơn: 157 MB so với 314 MB.
 - **Bài học:** khi đánh giá model cho tính năng an toàn, phải báo cáo cả missed_unreliable và unsafe_rate, không chỉ mIoU.
 
 ### Quyết định 2: giữ ngưỡng 80/50, nhưng nêu rõ trade-off

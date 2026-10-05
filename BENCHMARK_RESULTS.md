@@ -62,7 +62,7 @@ Gọi o(c) là độ cản sáng của từng lớp: `[0, 0.33, 0.66, 1.0]`. V l
 |---|---|---|---|---|
 | A · Baseline | GT mask, 497 frame test | Score (điểm), state | [exp_a_real/log.txt](results/exp_a_real/log.txt) | Mốc tham chiếu |
 | A · Lỗi | Mask dự đoán của 4 model (mIoU 0.44–0.62) | MAE, state acc, missed Unreliable | [summary_models.csv](results/exp_a_real/summary_models.csv), [scatter](results/exp_a_real/scatter_gt_vs_pred.png) | Lỗi segmentation làm sai quyết định bao nhiêu |
-| B · Baseline | 32 frame sạch nhất (8 frame mỗi camera, GT coverage 3–11%) | Score, edge density ROI | [exp_b_controlled/log.txt](results/exp_b_controlled/log.txt) | Mốc của từng frame |
+| B · Baseline | 32 frame sạch nhất (8 frame mỗi camera, GT coverage 3.0–11.1%) | Score, edge density ROI | [exp_b_controlled/log.txt](results/exp_b_controlled/log.txt) | Mốc của từng frame |
 | B · Lỗi | Loại {transparent, opaque} × vị trí {centre, periphery} × coverage thêm {10, 25, 40, 60}%, seed 2026 | Score, state, edge density giữ lại (%) | [score_vs_coverage.png](results/exp_b_controlled/score_vs_coverage.png) | Xu hướng khi mức lỗi tăng |
 | C | v1 so với v2 (kiểm tra ảnh), min_ratio ∈ {0.1…0.3} | % Unreliable, báo động sai | [image_check_tradeoff.png](results/exp_c_image_check/image_check_tradeoff.png) | Lợi ích so với chi phí của cải tiến |
 
@@ -122,7 +122,7 @@ Chi tiết trong [real_frames_tradeoff.csv](results/exp_c_image_check/real_frame
 **F1: dữ liệu thật. Model bỏ sót vết bẩn transparent nên camera trông khỏe hơn thực tế.** Xem [failure_cases.png](results/exp_a_real/failure_cases.png).
 
 - *Nhóm quan sát được:* có 16 frame được dự đoán lạc quan hơn GT. Ví dụ 4500_RV: GT cho 45.0 điểm, Unreliable (weight 0); FPN-R18 cho 52.9 điểm, Degraded (weight 0.5). Ở frame này, 10% khung hình là transparent theo GT nhưng bị dự đoán là clear. Frame 4518_MVR và 4522_MVR cũng vậy, lần lượt 15% và 16% khung hình.
-- *Repo/paper cho biết:* IoU của lớp transparent chỉ đạt 0.10–0.30 trên mọi model, trong khi opaque khoảng 0.80 (file evaluations trong `model_outputs`). Paper P1 cũng thừa nhận nhãn lớp này mơ hồ: *"the differentiation between the Transparent and Semi-transparent classes is somewhat ambiguous"*.
+- *Repo/paper cho biết:* IoU của lớp transparent chỉ đạt 0.10–0.30 trên cả 39 model, trong khi opaque đạt 0.64–0.82 (file evaluations trong `model_outputs`, tổng hợp ở [repo_models_ranking.csv](results/tv1_data/repo_models_ranking.csv)). Paper P1 cũng thừa nhận nhãn lớp này mơ hồ: *"the differentiation between the Transparent and Semi-transparent classes is somewhat ambiguous"*.
 - *Suy luận, chưa đo:* fusion sẽ cho camera này weight 0.5 dù theo GT nó phải bị loại. Nhóm chưa đo tác động lên detector.
 
 **F2: thiết kế. Mask chỉ cho biết vết bẩn "transparent", không cho biết nó làm nhòe ảnh đến mức nào.** Xem [example_strip.png](results/exp_b_controlled/example_strip.png).
@@ -133,7 +133,7 @@ Chi tiết trong [real_frames_tradeoff.csv](results/exp_c_image_check/real_frame
 
 ## 5. Quyết định kỹ thuật và trade-off
 
-1. **Chọn model theo metric quyết định, không theo mIoU.** FPN-R50 và FPN-R18 có mIoU bằng nhau (0.617 và 0.616), nhưng FPN-R50 bỏ sót Unreliable nhiều gấp khoảng 3 lần (9.1% so với 2.8%). Checkpoint FPN-R18 cũng nhỏ hơn (157 MB so với 315 MB). Đề xuất dùng **FPN-R18**.
+1. **Chọn model theo metric quyết định, không theo mIoU.** FPN-R50 và FPN-R18 có mIoU bằng nhau (0.617 và 0.616), nhưng FPN-R50 bỏ sót Unreliable nhiều gấp khoảng 3 lần (9.1% so với 2.8%). Checkpoint FPN-R18 cũng nhỏ hơn (157 MB so với 314 MB). Đề xuất dùng **FPN-R18**.
 2. **Giữ score từ mask làm tín hiệu chính, thêm kiểm tra ảnh (v2, min_ratio 0.2) như một luật chỉ được hạ state.**
    - Lợi ích: bắt được F2 (97%), không tăng báo động sai trên frame GT Healthy.
    - Chi phí: tỉ lệ frame thật bị loại tăng từ 22.2% lên 28.2%. Khi camera bị loại, hệ thống mất tính năng dựa vào camera đó, tức là giảm availability.
@@ -172,11 +172,11 @@ python -m camera_health --masks model_outputs/fpn_resnet18_torch_cross_entropy_c
 
 ## 8. Phân công (4 thành viên)
 
-| Thành viên | Phụ trách | File chính | Phần pitch |
-|---|---|---|---|
-| TV1 · Dữ liệu và nguồn | Bước 1–2: đọc repo/paper, tải dữ liệu, mặt nạ fisheye, kiểm tra trùng nhãn/rò rỉ | `benchmark/fetch_woodscape_subset.py`, `benchmark/build_valid_masks.py` | Problem (≈40 s) |
-| TV2 · Thuật toán | 5 đặc trưng → severity → score → state → weight; config; test; độ nhạy ngưỡng; ablation | `camera_health/`, `tests/` | Method (≈60 s) |
-| TV3 · Benchmark thật | Exp A với 4 model; failure case F1; chọn model | `benchmark/exp_a_real.py`, `results/exp_a_real/` | Benchmark A + F1 (≈75 s) |
-| TV4 · Benchmark mô phỏng và quyết định | Exp B, Exp C; failure case F2; engineering decision; ghép slide | `benchmark/synth_soiling.py`, `exp_b_controlled.py`, `exp_c_image_check.py` | Benchmark B/C + F2 + Decision (≈90 s) |
+Họ tên và MSSV lấy từ [TEAMMATES.md](TEAMMATES.md).
 
-Báo cáo riêng: [reports/](reports/).
+| Thành viên | Phụ trách | File chính | Báo cáo riêng | Phần pitch |
+|---|---|---|---|---|
+| TV1 · Vũ Đức Thiện (2A202602437) · Dữ liệu và nguồn | Bước 1–2: đọc repo/paper, tải dữ liệu, mặt nạ fisheye, kiểm tra trùng nhãn/rò rỉ | `benchmark/fetch_woodscape_subset.py`, `benchmark/build_valid_masks.py`, `benchmark/tv1_data_checks.py`, `results/tv1_data/` | [TV1](reports/TV1_du_lieu_nguon.md) | Problem (≈40 s) |
+| TV2 · Võ Minh Quân (2A202602429) · Thuật toán | 5 đặc trưng → severity → score → state → weight; config; test; độ nhạy ngưỡng; ablation | `camera_health/`, `tests/` | [TV2](reports/TV2_thuat_toan.md) | Method (≈60 s) |
+| TV3 · Dương Văn Thành (2A202602368) · Benchmark thật | Exp A với 4 model; failure case F1; chọn model | `benchmark/exp_a_real.py`, `benchmark/common.py`, `results/exp_a_real/` | [TV3](reports/TV3_benchmark_that.md) | Benchmark A + F1 (≈75 s) |
+| TV4 · Hồ Ngọc Mai (2A202602509) · Benchmark mô phỏng và quyết định | Exp B, Exp C; failure case F2; engineering decision; ghép slide | `benchmark/synth_soiling.py`, `exp_b_controlled.py`, `exp_c_image_check.py`, `results/exp_b_controlled/`, `results/exp_c_image_check/` | [TV4](reports/TV4_mo_phong_quyet_dinh.md) | Benchmark B/C + F2 + Decision (≈90 s) |

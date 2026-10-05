@@ -124,7 +124,12 @@ Tôi chọn **F1: model bỏ sót vết bẩn transparent, nên camera trông kh
 
 ## Nguồn, version, lệnh chạy
 
-- **Repo nhóm:** <https://github.com/vuthien3002-sys/K4-Track4-Day04-36Thieves-Sensor-Reality-Sprint>, nhánh `main`. Commit của tôi: `0142cb0`, `bf763e5`, và commit kiểm tra dữ liệu TV1.
+- **Repo nhóm:** <https://github.com/vuthien3002-sys/K4-Track4-Day04-36Thieves-Sensor-Reality-Sprint>, nhánh `main`. Commit của tôi:
+  - `0142cb0`: công cụ tải dữ liệu, mặt nạ fisheye, `.gitignore`
+  - `bf763e5`: `SOURCES.md`, `TEAMMATES.md`
+  - `c1e08da`: kiểm tra dữ liệu `results/tv1_data/`, báo cáo TV1
+  - `ede9490`: đưa log, plot của Exp A/B/C, unit test và `BENCHMARK_RESULTS.md` lên repo
+  - `f17fc04`, `40838e1`: dọn repo và đồng bộ số liệu giữa các báo cáo
 - **Code gốc:** <https://github.com/filipberanek/woodscape_revision>, commit `e9dc138`.
 - **Dữ liệu (link lấy từ README):** `woodscape_input.zip` (Drive id `1WNlDBADwlaheMaVpIjEeAMklw7jle9Ja`, 5.5 GB) và `model_outputs.zip` (id `13k17SjgQHZCO-1Ctr3DY_bW6DGvQZZie`, 6.6 GB).
 - **Paper đọc toàn văn:**
